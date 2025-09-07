@@ -1,0 +1,6 @@
+flask
+requests
+openai
+faiss-cpu
+sentence-transformers
+gunicorn
