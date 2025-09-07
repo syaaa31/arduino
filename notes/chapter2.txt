@@ -1,0 +1,216 @@
+CHAPTER 2
+
+PROJECT 2.1 Buzzer
+
+COURSE LEARNING OUTCOMES 
+CLO1: Construct the Arduino circuit, input the coding.
+CLO2: Demonstrate ability to work in team to complete assigned task during practical work sessions.
+
+OBJECTIVE
+Understand and know how to use buzzer as a digital/analog output.
+Can apply buzzer functions in simple alert or notification systems.
+
+THEORY
+A buzzer is an electromechanical or electronic device that converts electrical energy into sound. In digital electronics, a buzzer can be activated by applying a HIGH or LOW signal depending on its type (active or passive). An active buzzer produces sound when a DC voltage is applied, as it has a built-in oscillator, while a passive buzzer requires an external signal to generate sound. In the given circuit, the buzzer is connected to a digital output pin of the microcontroller, and sound is produced when the microcontroller sends a HIGH signal to the buzzer for a set period. The pitch (frequency) and duration of the sound can be controlled in code to create short beeps, long beeps, or patterns of beeps for different indications.
+
+
+EQUIPMENT/TOOLS
+Trainer kit
+USB cable x1
+Buzzer
+Jumper M/M x1
+
+PROCEDURE
+Construct the logic circuit, connect the pin 9 to input pin buzzer
+
+Insert the sketch below in Arduino IDE (BUZZER CODING)
+const int buzzer = 9;
+
+void setup() {
+pinMode(buzzer, OUTPUT); // Set buzzer - pin 9 as an output
+
+void loop() {
+tone(buzzer, 1000); // Send 1KHz sound signal...
+delay(1000);         // ...for 1 sec
+noTone(buzzer);     // Stop sound...
+
+delay(1000);         // ...for 1sec
+}
+
+RESULT
+Observation: The buzzer will beep for 1 second, then stay silent for I second, and repeat forever.
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+CHAPTER 2
+
+PROJECT 2.2 BUZZER – (BUZZER AND RGB LED)
+
+COURSE LEARNING OUTCOMES 
+CLO1: Construct the Arduino circuit, input the coding.
+CLO2: Demonstrate ability to work in team to complete assigned task during practical work sessions.
+
+OBJECTIVE
+Understand and know how to use buzzer as a digital/analog output.
+Can apply buzzer functions in simple alert or notification systems.
+
+THEORY
+In digital electronics, an RGB LED can be used to visually indicate system states or provide color-coded feedback by controlling its red, green, and blue channels individually. An RGB LED contains three light-emitting diodes within a single package, with a common pin (either anode or cathode) and separate pins for each color channel. By applying HIGH or LOW signals, or using pulse-width modulation (PWM), the brightness of each channel can be adjusted to create a wide range of colors. Current-limiting resistors are usually placed in series with each channel to prevent excessive current flow, ensuring safe operation and prolonging the LED’s lifespan.
+
+A buzzer is an electromechanical or electronic device that converts electrical energy into sound. In digital electronics, a buzzer can be activated by applying a HIGH or LOW signal depending on its type (active or passive). An active buzzer produces sound when a DC voltage is applied, as it has a built-in oscillator, while a passive buzzer requires an external signal to generate sound. In the given circuit, the buzzer is connected to a digital output pin of the microcontroller, and sound is produced when the microcontroller sends a HIGH signal to the buzzer for a set period. The pitch (frequency) and duration of the sound can be controlled in code to create short beeps, long beeps, or patterns of beeps for different indications.
+
+EQUIPMENT / TOOLS
+Trainer Kit 
+USB cable x1
+Buzzer
+RGB LED
+Jumper M/M x4  
+
+PROCEDURE
+Construct the logic circuit, connect the pin 9,10 11 and 2 of the Arduino to red ,green , blue and input signal of the rgb led and buzzer .
+
+Insert the sketch below in Arduino IDE (BUZZER & RGB CODING)
+#define pinBuzzer 2
+#define pinRed 9
+#define pinGreen 10 
+#define pinBlue 11
+
+int beepCount = 1;
+
+void setup() {
+pinMode(pinBuzzer, OUTPUT);
+pinMode(pinRed, OUTPUT);
+pinMode(pinGreen, OUTPUT);
+pinMode(pinBlue, OUTPUT);
+turnOffRGB();
+}
+
+void loop() {
+beepMultipleTimes(beepCount);
+setRGB(beepCount);
+
+delay(5000);  // wait 5 seconds before changing
+beepCount++;
+
+if (beepCount > 3) beepCount = 1;  // cycle back to 1 beep
+ }
+
+void beepMultipleTimes(int count) {
+  for (int i = 0; i < count; i++) {
+    digitalWrite(pinBuzzer, HIGH);
+    delay(200);
+    digitalWrite(pinBuzzer, LOW);
+    delay(200);
+}
+
+void setRGB(int count) {
+switch (count) {
+   case 1: setColor(0, 255, 0);  // Green
+           break;
+   case 2: setColor(0, 0, 255);  // Blue
+           break;
+  default:  setColor(255, 0, 0);  // Red
+           break;
+   }
+}
+void setColor(int r, int g, int b) {
+analogWrite(pinRed, r);
+analogWrite(pinGreen, g);
+analogWrite(pinBlue, b);
+ }
+void turnOffRGB() {
+  analogWrite(pinRed, 0);
+  analogWrite(pinBlue, 0);
+  analogWrite(pinGreen, 0);
+}
+
+
+
+
+RESULT
+Observation: When the buzzer beeps 1 time, the RGB LED lights up green.
+Observation: When the buzzer beeps 2 times, the RGB LED lights up blue.
+Observation: When the buzzer beeps 3 times, the RGB LED lights up red.
+----------------------------------------------------------------------------------------------------------------------------------------
+
+CHAPTER 2
+
+PROJECT 2.3 BUZZER – (BUZZER & SWITCH)
+
+COURSE LEARNING OUTCOMES 
+CLO1: Construct the Arduino circuit, input the coding.
+CLO2: Demonstrate ability to work in team to complete assigned task during practical work sessions.
+
+OBJECTIVE
+Understand and know how to use Arduino digital output pins to control a buzzer and digital input pins to read a switch.
+Produce different buzzer sound patterns based on switch input states.
+Apply buzzer and switch combinations in simple alert or interactive systems.
+
+THEORY
+A buzzer is an electromechanical or electronic device that converts electrical energy into sound. In digital electronics, a buzzer can be activated by applying a HIGH or LOW signal depending on its type (active or passive). An active buzzer produces sound when a DC voltage is applied, as it has a built-in oscillator, while a passive buzzer requires an external signal to generate sound. In the given circuit, the buzzer is connected to a digital output pin of the microcontroller, and sound is produced when the microcontroller sends a HIGH signal to the buzzer for a set period. The pitch (frequency) and duration of the sound can be controlled in code to create short beeps, long beeps, or patterns of beeps for different indications.
+
+A switch is an electrical component used to open or close a circuit, thereby controlling the flow of current. In this setup, push-button switches are connected to the microcontroller’s digital input pins, with internal pull-up resistors enabled. This means the input pin reads HIGH when the switch is not pressed, and LOW when the switch is pressed (as the circuit is completed to ground). Each switch in the code triggers a different buzzer pattern or tone frequency, allowing the user to generate distinct sounds based on which button is pressed. This method is useful for creating multi-function input control with simple hardware.
+
+EQUIPMENT/TOOLS
+Trainer kit
+USB cable x1
+Buzzer
+Jumper M/M x10
+
+PROCEDURE
+Construct the logic circuit,pin 9 , 5 , 4 , 3 , 2 to sw1,2,3,4 and signal of the buzzer . Connect CS1,2,3,4 to the GND of the Arduino Uno.
+
+Insert the sketch below in Arduino IDE (BUZZER & SWITCH CODING)
+const int buzzerPin = 9;
+const int switch1Pin = 2;
+const int switch2Pin = 3;
+const int switch3Pin = 4;
+const int switch4Pin = 5;
+
+void setup() {
+ pinMode(buzzerPin, OUTPUT);
+ pinMode(switch1Pin, INPUT_PULLUP);
+ pinMode( switch2Pin, INPUT_PULLUP);
+ pinMode( switch3Pin, INPUT_PULLUP);
+ pinMode( switch4Pin, INPUT_PULLUP);
+}
+void loop() {
+  int switch1State =  digitalRead(switch1Pin);
+  int switch2State =  digitalRead(switch2Pin);
+  int switch3State =  digitalRead(switch3Pin);
+  int switch4State =  digitalRead(switch4Pin);
+
+  if (switch1State == 0){
+     tone(buzzerPin, 1000);
+     delay(100);
+     noTone(buzzerPin);
+}
+  else if (switch2State == 0){
+     tone(buzzerPin, 500);
+     delay(500);
+     noTone(buzzerPin);  
+}
+   else if (switch3State == 0){
+     tone(buzzerPin, 2000);
+     delay(200);
+     noTone(buzzerPin);  
+}
+  else if (switch4State == 0){
+     tone(buzzerPin, 1500);
+     delay(50);
+     noTone(buzzerPin);  
+     delay(1000);
+     tone(buzzerPin, 1500);
+     delay(50);
+     noTone(buzzerPin);  
+ }  
+     delay(10);
+}
+
+RESULT
+Pressing switch 1, buzzer plays a 1kHz tone for 0.1 seconds then stops.
+Pressing switch 2, buzzer plays a 500 Hz tone for 0.5 seconds then stops.
+Pressing switch 3, buzzer plays a 2 kHz tone for 0.2 seconds then stops.
+Pressing switch 4, buzzer emits 2 short 1.5 kHz, each lasting 0.05 seconds, with a 1-second gap between them.
+
+
+
