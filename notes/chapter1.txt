@@ -1,0 +1,419 @@
+CHAPTER 1
+( LED )
+
+PROJECT 1.1 LED – (ACTIVE LOW & ACTIVE HIGH)
+
+COURSE LEARNING OUTCOMES
+CLO2: Construct the Arduino circuit , input the coding .
+CLO3: Demonstrate ability to work in team to complete assigned task during practical work
+sessions.
+
+OBJECTIVE
+1. Understand and know how to use pin digital output.
+2. Understand the use of Active Low and Active High.
+3. Know how to trigger output.
+3 THEORY
+
+In digital electronics, signals can be used to activate (turn on) or deactivate (turn off) a
+component. The terms active low and active high refer to which logic level (HIGH or LOW) causes
+the component or circuit to become active (enabled, ON, or triggered).
+
+An active-low LED circuit turns the LED ON when a LOW (0) signal is applied, because current
+flows from the positive supply through the resistor and LED into the LOW pin, causing it to light
+up. When a HIGH (1) is given, the voltage difference is too small, so the LED stays OFF. In
+contrast, an active-high LED circuit turns ON when given a HIGH (1), as current flows from the
+HIGH pin through the resistor and LED to ground, making the LED light up; it stays OFF when the
+input is LOW. The resistor in both circuits is used to limit current and protect the LED, with typical
+values ranging from 150Ω to 2.2kΩ depending on LED type and desired brightness.
+
+
+EQUIPMENT / TOOLS
+1. Trainer Kit
+2. USB cable x1
+3. LED (Active Low & Active High)
+4. Jumper M/M x2
+
+
+1. Construct the logic circuit, connect the pin 9 and 8 to active low and active high of the LED.
+
+Insert the sketch below in Arduino IDE (LED coding)
+void setup() {
+  pinMode(8, OUTPUT);  // Active LOW device
+  pinMode(9, OUTPUT);  // Active HIGH device
+}
+
+void loop() {
+  // Step 1: Turn ON pin 8 (LOW), OFF pin 9 (LOW)
+  digitalWrite(8, LOW);   // ON (active low)
+  digitalWrite(9, LOW);   // OFF (active high)
+  delay(1000);            // wait 1 second
+
+  // Step 2: Turn OFF pin 8 (HIGH), ON pin 9 (HIGH)
+  digitalWrite(8, HIGH);  // OFF (active low)
+  digitalWrite(9, HIGH);  // ON (active high)
+  delay(1000);            // wait 1 second
+}
+
+
+6 RESULT
+Observation : The led blinks alternatingly.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+CHAPTER 1
+( LED )
+
+PROJECT 1.2 LED – (LDR AND LED)
+
+COURSE LEARNING OUTCOMES
+CLO2: Construct the Arduino circuit , input the coding .
+CLO3: Demonstrate ability to work in team to complete assigned task during practical work
+sessions.
+
+OBJECTIVE
+1. Understand and know how to use pin digital output.
+2. Understand the use of Active Low and Active High & LDR
+3. Understand and know how to use pin analog input.
+
+
+THEORY
+In digital electronics, signals can be used to activate (turn on) or deactivate (turn off) a
+component. The terms active low and active high refer to which logic level (HIGH or LOW) causes
+the component or circuit to become active (enabled, ON, or triggered).
+An active-low LED circuit turns the LED ON when a LOW (0) signal is applied, because
+current flows from the positive supply through the resistor and LED into the LOW pin, causing it
+to light up. When a HIGH (1) is given, the voltage difference is too small, so the LED stays OFF. In
+contrast, an active-high LED circuit turns ON when given a HIGH (1), as current flows from the
+HIGH pin through the resistor and LED to ground, making the LED light up; it stays OFF when the
+input is LOW. The resistor in both circuits is used to limit current and protect the LED, with typical
+values ranging from 150Ω to 2.2kΩ depending on LED type and desired brightness.
+
+It works on the principle of photoconductivity whenever the light falls on its photoconductive
+material, it absorbs its energy and the electrons of that photoconductive material in the valence
+band get excited and go to the conduction band and thus increasing the conductivity as per the
+increase in light intensity. Also, the energy in incident light should be greater than the bandgap
+gap energy so that the electrons from the valence band got excited and go to the conduction
+band.
+
+EQUIPMENT / TOOLS
+1. Trainer Kit
+2. USB cable x1
+3. LED (Active Low & Active High) & LDR
+4. Jumper M/M x3
+
+PROCEDURE
+1. Construct the logic circuit, connect the pin 9 and 8 to active low and
+active high of the LED.
+
+Insert the sketch below in Arduino IDE (LDR AND LED CODING)
+const int ldrPin = A0;      // LDR analog input
+const int ledHigh = 8;      // Active HIGH LED
+const int ledLow = 9;       // Active LOW LED
+int lightValue = 0;
+const int threshold = 1000;  // Adjust this based on brightness level
+
+void setup() {
+    pinMode(ledHigh, OUTPUT);
+  pinMode(ledLow, OUTPUT);
+  Serial.begin(9600); // Optional: for debugging LDR values
+}
+
+void loop() {
+    lightValue = analogRead(ldrPin);
+    Serial.println(lightValue); // View in Serial Monitor
+
+    if (lightValue > threshold) {  // It's dark
+    digitalWrite(ledHigh, 1); // ON (active high)
+    digitalWrite(ledLow, 0);   // ON (active low)
+  } else {                       // It's bright
+    digitalWrite(ledHigh, 0);  // OFF (active high)
+    digitalWrite(ledLow, 1);  // OFF (active low)
+  }
+
+  delay(200);
+}
+
+
+RESULT
+1) Threshold < 1000 both led off
+1) Threshold > 1000 both led on
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CHAPTER 1
+( LED )
+
+PROJECT 1.3 LED – (RGB)
+
+COURSE LEARNING OUTCOMES
+CLO2: Construct the Arduino circuit , input the coding .
+CLO3: Demonstrate ability to work in team to complete assigned task during practical work
+sessions.
+
+OBJECTIVE
+1. Understand and know how to use pin digital output.
+2. Understand the use of RGB.
+
+THEORY
+A RGB LED has 3 LEDs integrated into one LED component. It can respectively emit Red, Green and
+Blue light. In order to do this, it requires 4 pins (this is also how you identify it). The long pin (1) is the
+common which is the Cathode (+) or positive lead, the other 3 are the Anodes (-) or negative leads. A
+rendering of a RGB LED and its electronic symbol are shown below. We can make RGB LED emit
+various colors of light and brightness by controlling the 3 Anodes (2, 3 & 4) of the RGB LED.
+
+Red, Green, and Blue light are called 3 Primary Colors when discussing light (Note: for pigments
+such as paints, the 3 Primary Colors are Red, Blue and Yellow). When you combine these three
+Primary Colors of light with varied brightness, they can produce almost any color of visible light.
+Computer screens, single pixels of cell phone screens, neon lamps, etc. can all produce millions
+of colors due to phenomenon.
+
+We know from the previous section that, control board controls LED to emit a total of 256(0-255)
+different brightness via PWM. So, through different combinations of RGB light brightness, we can
+create 256^3=16777216(16Million) colours.
+
+EQUIPMENT / TOOLS
+1. Trainer Kit
+2. USB cable x1
+3. RGB LED
+4. Jumper M/M x3
+
+PROCEDURE
+1. Construct the logic circuit, connect the pin 11, 10 and 9 to RGB LED.
+
+Insert the sketch below in Arduino IDE. (RGB CODING)
+
+// RGB LED pins
+const int redPin = 11;
+const int greenPin = 10;
+const int bluePin = 9;
+
+void setup() {
+pinMode(redPin, OUTPUT);
+pinMode(greenPin, OUTPUT);
+pinMode(bluePin, OUTPUT);
+}
+
+void loop() {
+// Example: set to Purple (Red + Blue)
+setColor(255, 0, 255); // R,G,B values (0–255)
+delay(1000);
+
+// Example: set to Yellow (Red + Green)
+setColor(255, 255, 0);
+delay(1000);
+
+// Example: set to Cyan (Green + Blue)
+setColor(0, 255, 255);
+delay(1000);
+
+// Example: White (R+G+B full brightness)
+setColor(255, 255, 255);
+delay(1000);
+
+// Fade through red
+for (int i = 0; i <= 255; i++) {
+setColor(i, 0, 0);
+delay(10);
+ }
+}
+// Function to set RGB values
+void setColor(int red, int green, int blue) {
+analogWrite(redPin, red);
+analogWrite(greenPin, green);
+analogWrite(bluePin, blue);
+}
+
+RESULT
+
+Observation : 1) The cycle loop is purple ,yellow, blue, white and red.
+              2) The colour fades from white to red
+                  1st Cycle Purple 
+                  2nd Cycle Purple
+                  3rd Cycle Purple
+                  4th Cycle Purple
+                  6th Cycle Purple
+                  7th Cycle Purple
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CHAPTER 1
+( LED )
+
+PROJECT 1.4 LED – (RGB AND POTENTIOMETER)
+
+COURSE LEARNING OUTCOMES
+CLO2: Construct the Arduino circuit , input the coding .
+CLO3: Demonstrate ability to work in team to complete assigned task during practical work
+sessions.
+
+OBJECTIVE
+1. Understand and know how to use pin digital output.
+2. Understand the use of RGB and Potentiometer
+3. Understand and know how to use pin analog input.
+
+THEORY
+In digital electronics, signals can be used to activate (turn on) or deactivate (turn off) a
+component. The terms active low and active high refer to which logic level (HIGH or LOW) causes
+the component or circuit to become active (enabled, ON, or triggered).
+An active-low LED circuit turns the LED ON when a LOW (0) signal is applied, because
+current flows from the positive supply through the resistor and LED into the LOW pin, causing it
+to light up. When a HIGH (1) is given, the voltage difference is too small, so the LED stays OFF. In
+contrast, an active-high LED circuit turns ON when given a HIGH (1), as current flows from the
+HIGH pin through the resistor and LED to ground, making the LED light up; it stays OFF when the
+input is LOW. The resistor in both circuits is used to limit current and protect the LED, with typical
+values ranging from 150Ω to 2.2kΩ depending on LED type and desired brightness.
+A potentiometer is a simple mechanical device that comes in many different forms. It provides a
+variable amount of resistance that changes as you manipulate it. The examples in this article
+uses a potentiometer with a twisting shaft, one of the more common versions of a potentiometer
+you will find.
+
+By passing voltage through a potentiometer into an analog input on your Arduino, it is
+possible to measure the amount of resistance of the potentiometer as an analog value.
+It will showcase use cases of potentiometers, as well as teach you how to connect and
+read data from them. One shows how you can use a potentiometer as an input for a color
+mixer, and the other shows how to accurately choose colors and how to smoothly fade
+between them.
+
+All potentiometers have three pins. The outer pins are used for connecting power
+source (Vref and gnd). The middle pin (output) give us the variable of resistance value.
+PWM (Pulse Width Modulation) is a technique used by the Arduino to control the amount of
+power delivered to a device—like an LED or motor—by rapidly switching the output pin between
+ON (5 V) and OFF (0 V) at a fixed frequency, while varying the proportion of time it stays ON within
+each cycle (called the duty cycle). A higher duty cycle means more power and brighter light (or
+faster motor speed), while a lower duty cycle means dimmer light (or slower speed), allowing
+precise control even though the Arduino can only output digital HIGH or LOW signals, not true
+analog voltages.
+It works on the principle of photoconductivity whenever the light falls on its photoconductive
+material, it absorbs its energy and the electrons of that photoconductive material in the valence
+band get excited and go to the conduction band and thus increasing the conductivity as per the
+increase in light intensity. Also, the energy in incident light should be greater than the bandgap
+gap energy so that the electrons from the valence band got excited and go to the conduction
+band.
+
+
+Value of Analog
+Write      Percent ON%
+          (Duty Cycle)
+ 0             0%
+127            50%
+255           100%
+
+
+EQUIPMENT / TOOLS
+1. Trainer Kit
+2. USB cable x1
+3. Potentiometer & LED (RGB)
+4. Jumper M/M x4
+
+PROCEDURE
+1. Construct the logic circuit, connect the pin11,10,9 to RGB led and pin A0 to signal of potentiometer , the 5v pin is connected to the middle pin
+
+Insert the sketch below in Arduino IDE (RGB AND POTENTIOMETER CODING)
+// Pins for RGB LED (common cathode)
+int redPin = 11;
+int greenPin = 10;
+int bluePin = 9;
+int potPin = A0;
+
+void setup() {
+pinMode(redPin, OUTPUT);
+pinMode(greenPin, OUTPUT);
+pinMode(bluePin, OUTPUT);
+}
+void loop() {
+int potValue = analogRead(potPin); // Read raw value (0–1023)
+
+// Map to PWM range
+int colorValue = map(potValue, 0, 1023, 0, 255);
+
+// Example color change
+analogWrite(redPin, colorValue);
+analogWrite(greenPin, colorValue/2);
+analogWrite(bluePin, 255-colorValue);
+
+delay(100); // Slow down readings
+}
+
+RESULT
+|Duty Cycle (%) |    RGB Colour   | Potentiometer Knob voltage|
+_______________________________________________________________
+|     0         |     Blue pure   |            0V             |
+|     50        | Cyan-light Blue |            2.5V           |
+|     100       |Orange-ish White |             5V            |
+_______________________________________________________________
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CHAPTER 1
+( LED )
+
+PROJECT 1.5 LED – (SPIO 8 BIT )
+
+COURSE LEARNING OUTCOMES
+CLO2: Construct the Arduino circuit , input the coding .
+CLO3: Demonstrate ability to work in team to complete assigned task during practical work
+sessions.
+
+OBJECTIVE
+1. Understand and know how to use pin digital output.
+2. Understand the use of 74HC595N IC
+
+THEORY
+The 74HC595N is a common 8-bit serial-in, parallel-out shift register, frequently used with
+
+Arduino to expand the number of available output pins. While it can be controlled using "bit-
+banging" (manually toggling digital pins), it is particularly well-suited for use with Arduino's
+
+Hardware SPI (Serial Peripheral Interface).
+• DS (Serial Data Input) of 74HC595N: Connect to Arduino's MOSI (Master Out Slave In)
+pin (e.g., Digital Pin 11 on Uno).
+• SH_CP (Shift Register Clock) of 74HC595N: Connect to Arduino's SCK (Serial Clock)
+pin (e.g., Digital Pin 13 on Uno).
+• ST_CP (Storage Register Clock/Latch) of 74HC595N: Connect to a digital pin on
+Arduino designated as the Latch pin (e.g., Digital Pin 10). This pin is used to transfer the
+data from the shift register to the output pins.
+• OE (Output Enable) of 74HC595N: Connect to GND to always enable outputs, or to a
+digital pin for controlled output enabling.
+• MR (Master Reset) of 74HC595N: Connect to VCC for normal operation, or to a digital
+pin for controlled resetting.
+• Q0-Q7 (Serial Data Output) of 74HC595N: The 8-bit data is then made available in
+parallel on the 74HC595N's output pins (Q0-Q7), which can be connected to the LEDs.
+
+EQUIPMENT / TOOLS
+1. Trainer Kit
+2. USB cable x1
+3. LED (SPIO 8 BIT LED)
+4. Jumper M/M x3
+
+PROCEDURE
+1. Construct the logic circuit, connect the pin 9 and 8 to active low andactive high of the LED.
+
+Insert the sketch below in Arduino IDE (SPIO 8 BIT CODING)
+
+// ST_CP pin 10
+const int latchPin = 10;
+// SH_CP pin 11
+const int clockPin = 11;
+// DS pin 12
+const int dataPin = 12;
+
+byte numberToDisplay = 0;
+
+void setup() {
+pinMode(latchPin, OUTPUT);
+pinMode(clockPin, OUTPUT);
+pinMode(dataPin, OUTPUT);
+}
+ void loop() {
+// Move LED from Q0 → Q7
+for (int i = 0; i < 8; i++) {
+numberToDisplay = 0; // Clear all LEDs
+bitSet(numberToDisplay, i); // Turn on LED i
+sendto595();
+delay(100); // Speed control (lower = faster)
+}
+}
+void sendto595() {
+digitalWrite(latchPin, LOW);
+shiftOut(dataPin, clockPin, MSBFIRST, numberToDisplay);
+digitalWrite(latchPin, HIGH);
+}
+
+RESULT
+Observation : The LED moves from led 1 to led 8 and loops again.
