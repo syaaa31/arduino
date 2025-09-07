@@ -1,0 +1,325 @@
+CHAPTER 3 (ULTRASONIC SENSOR)
+
+PROJECT 3.1 – (ULTRASONIC SENSOR)
+
+COURSE LEARNING OUTCOMES
+CLO2: Construct the Arduino circuit , input the coding .
+CLO3: Demonstrate ability to work in team to complete assigned task during practical work
+sessions.
+
+OBJECTIVE
+1. To measure distance using an HC-SR04 ultrasonic sensor and Arduino.
+2. To display the measured distance values on the Serial Monitor.
+3. To understand the principle of sound wave reflection (echo time) for distancecalculation.
+
+tHEORY
+The 16×2 Liquid Crystal Display (LCD) is used to show textual information such as the current
+score, game status, and messages like “Game Over.” It operates with RS, EN, and data pins
+(D4–D7) connected to the Arduino, allowing communication in 4-bit mode to save I/O pins.
+The LCD enhances the user experience by providing real-time feedback and game information
+that complements the visual gameplay on the LED matrix.
+
+An ultrasonic sensor is an electronic device that measures the distance of a target object
+by emitting ultrasonic sound waves, and converts the reflected sound into an electrical signal.
+Ultrasonic waves travel faster than the speed of audible sound (i.e. the sound that humans
+can hear). Ultrasonic sensors have two main components: the transmitter (which emits the
+sound using piezoelectric crystals) and the receiver (which encounters the sound after it has
+travelled to and from the target). In order to calculate the distance between the sensor and
+the object, the sensor measures the time it takes between the emission of the sound by the
+transmitter to its contact with the receiver. The formula for this calculation is D = 1⁄2 T x C
+(where D is the distance, T is the time, and C is the speed of sound ~ 343 meters/second).
+For example, if a scientist set up an ultrasonic sensor aimed at a box and it took 0.025 secondsNfor the sound to bounce back, the distance between the ultrasonic sensor and the box would be:
+
+Ultrasonic sensors are used primarily as proximity sensors. They can be found in automobile
+self- parking technology and anti-collision safety systems. Ultrasonic sensors are also used in
+robotic obstacle detection systems, as well as manufacturing technology. In comparison to
+infrared (IR) sensors in proximity sensing applications, ultrasonic sensors are not as
+susceptible to interference of smoke, gas, and other airborne particles (though the physical
+components are still affected by variables such as heat). Ultrasonic sensors are also used as
+level sensors to detect, monitor, and regulate liquid levels in closed containers (such as vats
+in chemical factories). Most notably, ultrasonic technology has enabled the medical industry
+to produce images of internal organs, identify tumors, and ensure the health of babies in the
+womb.
+
+EQUIPMENT / TOOLS
+1. Trainer Kit
+2. USB cable x1
+3. Ultrasonic Sensor
+4. Jumper M/M x2
+
+PROCEDURE
+1. Construct the logic circuit, connect the pin10 and 9 of the Arduino uno to Trigger and Echo of the Ultrasonic Sensor.
+
+Insert the sketch below in ArduinoIDE. (ULTRASONIC CODING)
+#define TRIG 9
+#define ECHO 10
+
+void setup() {
+Serial.begin(9600); 
+ pinMode(TRIG, OUTPUT);
+ pinMode(ECHO, INPUT);
+}
+
+void loop() {
+ digitalWrite(TRIG, LOW);
+ delayMicroseconds(2);
+ digitalWrite(TRIG, HIGH);
+ delayMicroseconds(10);
+ digitalWrite(TRIG, LOW);
+
+ long duration = pulseIn(ECHO, HIGH);
+ int distance = duration * 0.034 / 2;
+
+ Serial.print("Distance: ");
+ Serial.print(distance);
+ Serial.println(" cm");
+ delay(1000);
+ }
+
+RESULT
+Observation :
+• When an object was placed closer to the sensor, the distance value decreased on the Serial Monitor.
+• When the object was moved further away, the distance value increased.
+• The sensor readings updated every 1 second (1000 ms delay).
+--------------------------------------------------------------------------------------------------------------------------------------------
+CHAPTER 3 (ULTRASONIC SENSOR)
+
+PROJECT 3.2 – (ULTRASONIC + BUZZER)
+
+COURSE LEARNING OUTCOMES
+CLO2: Construct the Arduino circuit , input the coding .
+CLO3: Demonstrate ability to work in team to complete assigned task during practical work
+sessions.
+
+OBJECTIVE
+1. To interface an ultrasonic sensor with Arduino for measuring object distance.
+2. To implement a buzzer alert system when the object is closer than a set threshold (10 cm).
+3. To observe the effectiveness of using sound as proximity feedback.
+
+THEORY
+The 16×2 Liquid Crystal Display (LCD) is used to show textual information such as the current
+score, game status, and messages like “Game Over.” It operates with RS, EN, and data pins
+(D4–D7) connected to the Arduino, allowing communication in 4-bit mode to save I/O pins.
+The LCD enhances the user experience by providing real-time feedback and game information
+that complements the visual gameplay on the LED matrix.
+
+An ultrasonic sensor is an electronic device that measures the distance of a target object by
+emitting ultrasonic sound waves, and converts the reflected sound into an electrical signal.
+Ultrasonic waves travel faster than the speed of audible sound (i.e. the sound that humans
+can hear). Ultrasonic sensors have two main components: the transmitter (which emits the
+sound using piezoelectric crystals) and the receiver (which encounters the sound after it has
+travelled to and from the target). In order to calculate the distance between the sensor and
+the object, the sensor measures the time it takes between the emission of the sound by the
+transmitter to its contact with the receiver. The formula for this calculation is D = 1⁄2 T x C
+(where D is the distance, T is the time, and C is the speed of sound ~ 343 meters/second).
+For example, if a scientist set up an ultrasonic sensor aimed at a box and it took 0.025 seconds for the sound to bounce back, the distance between the ultrasonic sensor and the box would be:
+
+Ultrasonic sensors are used primarily as proximity sensors. They can be found in automobile
+self- parking technology and anti-collision safety systems. Ultrasonic sensors are also used in
+robotic obstacle detection systems, as well as manufacturing technology. In comparison to
+infrared (IR) sensors in proximity sensing applications, ultrasonic sensors are not as
+susceptible to interference of smoke, gas, and other airborne particles (though the physical
+components are still affected by variables such as heat). Ultrasonic sensors are also used as
+level sensors to detect, monitor, and regulate liquid levels in closed containers (such as vats
+in chemical factories). Most notably, ultrasonic technology has enabled the medical industry
+to produce images of internal organs, identify tumors, and ensure the health of babies in the
+womb.
+
+A buzzer is an audio signaling device commonly used in electronic circuits to provide alerts or
+notifications. It works on the piezoelectric principle, where a piezoelectric material vibrates to
+produce sound when voltage is applied. There are two main types: active buzzers, which
+contain an internal oscillator and can produce sound with direct power, and passive buzzers,
+which require external signals from a microcontroller to generate tones. Typically, the positive
+pin of the buzzer is connected to a digital output pin or VCC, while the negative pin is
+connected to ground. Buzzers are widely used in applications such as alarms, distance
+measurement systems with ultrasonic sensors, password-protected locks, and warning
+indicators.
+
+EQUIPMENT / TOOLS
+1. Trainer Kit
+2. USB cable x1
+3. Ultrasonic Sensor & Buzzer
+4. Jumper M/M x3
+
+PROCEDURE
+1. Construct the logic circuit, connect the pin10 and 9 of the Arduino uno to Trigger and Echo of the Ultrasonic Sensor , connect the pin 3 to input signal of buzzer.
+
+Insert the sketch below in ArduinoIDE (ULTRASONIC & BUZZER CODING)
+#define TRIG_PIN 9
+#define ECHO_PIN 10
+#define BUZZER_PIN 3
+#define DISTANCE_THRESHOLD 10 // centimeters
+
+float duration, distance;
+
+void setup() {
+Serial.begin (9600);
+pinMode(TRIG_PIN, OUTPUT);
+pinMode(ECHO_PIN, INPUT);
+pinMode(BUZZER_PIN, OUTPUT);
+}
+void loop() {
+ digitalWrite(TRIG_PIN, HIGH);
+ delayMicroseconds(10);
+ digitalWrite(TRIG_PIN, LOW);
+
+duration = pulseIn(ECHO_PIN, HIGH);
+distance = duration * 0.034 / 2;
+
+if(distance < DISTANCE_THRESHOLD)
+ digitalWrite(BUZZER_PIN, HIGH);
+ else
+ digitalWrite(BUZZER_PIN, LOW);
+
+ Serial.print("distance: ");
+ Serial.print(distance);
+ Serial.println(" cm");
+ delay(500);
+}
+
+RESULT
+Observation :
+• When the object was within 10 cm, the buzzer turned ON and gave an audible alert.
+• When the object was beyond 10 cm, the buzzer remained OFF.
+• The Serial Monitor displayed the distance in cm continuously, confirming accurate detection.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CHAPTER 3 (ULTRASONIC SENSOR)
+
+PROJECT 3.3 – ( ULTRASONIC & RGB )
+
+COURSE LEARNING OUTCOMES
+CLO2: Construct the Arduino circuit , input the coding .
+CLO3: Demonstrate ability to work in team to complete assigned task during practical work sessions.
+
+OBJECTIVE
+1. To interface an ultrasonic distance sensor with Arduino for measuring object distance.
+2. To control an RGB LED based on distance ranges (close, medium, far).
+3. To observe how sensor readings can be used for real-time visual feedback using colors.
+
+
+THEORY
+An ultrasonic sensor is an electronic device that measures the distance of a target object
+by emitting ultrasonic sound waves, and converts the reflected sound into an electrical signal.
+Ultrasonic waves travel faster than the speed of audible sound (i.e. the sound that humans
+can hear). Ultrasonic sensors have two main components: the transmitter (which emits the
+sound using piezoelectric crystals) and the receiver (which encounters the sound after it has
+travelled to and from the target). In order to calculate the distance between the sensor and
+the object, the sensor measures the time it takes between the emission of the sound by the
+transmitter to its contact with the receiver. The formula for this calculation is D = 1⁄2 T x C
+(where D is the distance, T is the time, and C is the speed of sound ~ 343 meters/second).
+For example, if a scientist set up an ultrasonic sensor aimed at a box and it took 0.025 seconds
+for the sound to bounce back, the distance between the ultrasonic sensor and the box would
+be:
+
+Ultrasonic sensors are used primarily as proximity sensors. They can be found in
+automobile self- parking technology and anti-collision safety systems. Ultrasonic sensors are
+also used in robotic obstacle detection systems, as well as manufacturing technology. In
+comparison to infrared (IR) sensors in proximity sensing applications, ultrasonic sensors are
+not as susceptible to interference of smoke, gas, and other airborne particles (though the
+physical components are still affected by variables such as heat).Ultrasonic sensors are also
+used as level sensors to detect, monitor, and regulate liquid levels in closed containers (such
+as vats in chemical factories). Most notably, ultrasonic technology has enabled the medical
+industry to produce images of internal organs, identify tumors, and ensure the health of babies
+in the womb.
+A RGB LED has 3 LEDs integrated into one LED component. It can respectively emit Red,
+Green and Blue light. In order to do this, it requires 4 pins (this is also how you identify it). The
+long pin (1) is the common which is the Cathode (+) or positive lead, the other 3 are the
+Anodes (-) or negative leads. A rendering of a RGB LED and its electronic symbol are shown
+below. We can make RGB LED emit various colors of light and brightness by controlling the 3
+Anodes (2, 3 & 4) of the RGB LED.
+
+Red, Green, and Blue light are called 3 Primary Colors when discussing light (Note: for
+pigments such as paints, the 3 Primary Colors are Red, Blue and Yellow). When you combine
+these three Primary Colors of light with varied brightness, they can produce almost any color
+of visible light. Computer screens, single pixels of cell phone screens, neon lamps, etc. can
+all produce millions of colors due to phenomenon.
+
+We know from the previous section that, control board controls LED to emit a total of 256(0-
+255) different brightness via PWM. So, through different combinations of RGB light brightness,
+we can create 256^3=16777216(16Million) colors.
+
+EQUIPMENT / TOOLS
+1. Trainer Kit
+2. USB cable x1
+3. Ultrasonic Sensor & Rgb Led
+4. Jumper M/M x5
+
+PROCEDURE
+1. Construct the logic circuit, connect the pin 9 and 10 to the trigger and echo of the ultrasonic sensor , connect pin 5 ,6 and 7 to the blue , green and red of the rgb led.
+
+Insert the sketch below in ArduinoIDE (ULTRASONIC & RGB CODING)
+#define TRIG_PIN 9
+#define ECHO_PIN 10
+
+// RGB LED pins (common cathode)
+#define RED_PIN 5
+#define GREEN_PIN 6
+#define BLUE_PIN 7
+
+// Distance ranges in cm
+#define CLOSE_DISTANCE 20
+#define MEDIUM_DISTANCE 50
+  long duration;
+  int distance;
+
+void setup() {
+pinMode(TRIG_PIN, OUTPUT);
+pinMode(ECHO_PIN, INPUT);
+pinMode(RED_PIN, OUTPUT);
+pinMode(GREEN_PIN, OUTPUT);
+pinMode(BLUE_PIN, OUTPUT);
+Serial.begin(9600);
+}
+void loop() {
+// Trigger ultrasonic sensor to send pulse
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+
+// Read echo duration
+  duration = pulseIn(ECHO_PIN, HIGH);
+
+// Calculate distance in cm
+  distance = duration * 0.034 / 2;
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+// Decide LED color based on distance
+  if (distance > 0 && distance <= CLOSE_DISTANCE) {
+    blinkColor(255, 0, 0); // Red - close
+  }
+  else if (distance > CLOSE_DISTANCE && distance <= MEDIUM_DISTANCE) {
+    blinkColor(0, 255, 0); // Green - medium
+  }
+  else if (distance > MEDIUM_DISTANCE) {
+    blinkColor(0, 0, 255); // Blue - far
+  }
+  else {
+
+// No valid reading; turn off LED
+  setColor(0, 0, 0);
+  }
+}
+void blinkColor(int red, int green, int blue) {
+setColor(red, green, blue); // Turn on color
+delay(200);
+setColor(0, 0, 0); // Turn off LED
+delay(200);
+}
+void setColor(int red, int green, int blue) {
+analogWrite(RED_PIN, red);
+analogWrite(GREEN_PIN, green);
+analogWrite(BLUE_PIN, blue);
+}
+
+
+RESULT
+Observation:
+• When you place an object very near (< 20 cm), the RGB LED starts blinking red quickly, and the serial monitor shows small distance values.
+• When you move the object a little farther (between 21 cm and 50 cm), the LED blinks green.
+• When the object is placed far away (> 50 cm), the LED blinks blue.
+• If no object is detected or sensor reading is invalid (distance = 0), the LED will turn off.
+• The blinking is caused by the blinkColor() function, which switches the LED ON and OFF with a 200 ms delay.
