@@ -1,0 +1,363 @@
+CHAPTER 10 LED DOT MATRIK
+
+PROJECT 10.1 (LED DOT MATRIX)
+
+At the end of the lab student should be able to:
+To understand the working principle of an IR sensor in detecting objects or obstacles.
+To learn how to interface an IR sensor with an Arduino for digital input reading.
+To observe and analyze the sensor’s response when an object is placed at different distances.
+
+Component List 
+Trainer Kit 
+USB cable x1 
+Led dot matrix  
+Jumper M/M x 1
+
+Component Knowledge
+The 8×8 LED matrix, controlled by the MAX7219 driver, is used as the display for the snake game. It lights up LEDs in rows and columns to represent the snake’s body and the food location. The MAX7219 simplifies control by using only three pins (DIN, CS, CLK) from the Arduino, making it efficient to manage all 64 LEDs. This allows smooth and clear visualization of the snake’s movement and game progress. (Download library LedControl) 
+                                                                                                             
+
+Circuit Connection
+connect data to pin 11, clock to pin 13 and load to pin 10     
+                                                                    
+Sketch
+#include<LedControl.h>
+#define DIN_PIN 11
+#define CLK_PIN 13
+#define CS_PIN 10
+LedControl lc = LedControl(DIN_PIN,CLK_PIN,CS_PIN, 1);
+
+void setup() {  
+lc.shutdown(0, false);
+lc.setIntensity(0, 8);
+lc.clearDisplay(0);
+  lc.setLed(0, 3, 4, true);
+}
+void loop() {  
+}
+
+Results & Observation                                                              
+Observation : LED at row 3, column 3(rows 0–7) turns ON.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+PROJECT 10.2 – LED DOT MATRIX (MATRIX AND JOYSTICK)
+
+At the end of the lab student should be able to:
+To design and implement a Snake Game using an 8×8 LED matrix as the display.
+To use a joystick as an interactive input device for controlling the snake’s movement.
+To apply concepts of embedded programming such as random number generation, collision detection, and real-time control in Arduino.
+
+Component List 
+Trainer Kit 
+USB cable x1 
+Matrix & Joystick
+Jumper M/M x 2
+
+Component Knowledge
+The joystick module is an input device that works using two potentiometers placed at right angles, allowing movement detection along the X-axis (left–right) and Y-axis (up–down). By reading the analog values from these potentiometers, the Arduino can determine the direction of movement to control the snake in the game. The joystick also has a built-in push button (SW), which can be used for additional functions such as pausing or resetting the game.
+                                                                                                                                                
+The 8×8 LED matrix, controlled by the MAX7219 driver, is used as the display for the snake game. It lights up LEDs in rows and columns to represent the snake’s body and the food location. The MAX7219 simplifies control by using only three pins (DIN, CS, CLK) from the Arduino, making it efficient to manage all 64 LEDs. This allows smooth and clear visualization of the snake’s movement and game progress. (Download library LedControl) 
+
+Circuit Connection
+connect data to pin 11, clock to pin 13 and load to pin 10. For the joystick part, connect VRX to pin A0, VRY to pin A1 and SW to pin 2.
+                                                               
+Sketch
+#include<LedControl.h>
+#define DIN_PIN 11
+#define CLK_PIN 13
+#define CS_PIN 10
+LedControl lc = LedControl(DIN_PIN,CLK_PIN,CS_PIN, 1);
+
+#define VRX A0
+#define VRY A1
+#define SW 2
+
+const int N = 8;
+int snakeX[64];
+int snakeY[64];
+int snakeLength = 3;
+int foodX, foodY;
+
+enum Direction {UP, DOWN, LEFT, RIGHT};
+Direction dir = RIGHT;
+
+unsigned long lastMove = 0;
+int moveDelay = 400;
+
+void setup() {  
+lc.shutdown(0, false);
+lc.setIntensity(0, 8);
+lc.clearDisplay(0);
+  pinMode(SW, INPUT_PULLUP);
+  randomSeed(analogRead(0));
+
+  snakeX[0] = 3; snakeY[0] = 4;
+  snakeX[1] = 2; snakeY[1] = 4;
+  snakeX[2] = 1; snakeY[2] = 4;
+
+  spawnFood();
+}
+void loop() {  
+     readJoystick();
+     if(millis() – lastMove > moveDelay){
+        lastMove = millis();
+        moveSnake();
+        drawBoard();
+    }
+}
+void readJoystick(){
+  int xVal = analogRead(VRX);
+  int yVal = analogRead(VRY);
+
+  if(xVal <300 && dir != RIGHT)dir = LEFT;
+  if(xVal >700 && dir != LEFT)dir = RIGHT;
+  if(yVal <300 && dir != DOWN)dir = UP;
+  if(yVal >700 && dir != UP)dir = DOWN;
+}
+
+void moveSnake(){
+  for(int i=snakeLength – 1; i>0; i--){
+  snakeX[i] = snakeX[i-1];
+  snakeY[i] = snakeY[i-1];
+ }
+  if(dir == UP)    snakeY[0]--;
+  if(dir == DOWN)  snakeY[0]++;
+  if(dir == LEFT)  snakeX[0]--;
+  if(dir == RIGHT) snakeX[0]++;
+
+  if(snakeX[0] < 0 || snakeX[0] >= N || snakeY[0] < 0 || snakeY[0] >= N){
+    gameOver();
+ }
+  for(int i = 1; i < snakeLength; i++){ 
+   if(snakeX[0] == snakeX[i] && snakeY[0] == snakeY[i]){
+  gameOver();
+  }
+ }
+  if(snakeX[0] == foodX && snakeY[0] == foodY){
+   snakeLength++;
+   spawnFood();
+ }
+}
+void spawnFood(){
+ bool valid = false;
+ while (!valid){
+   foodX = random(0, N);
+   foodY = random(0, N);
+   valid = true;
+   for(int i=0; i< snakeLength; i++){
+      if(snakeX[i] == foodX && snakeY[i] == foodY){
+        valid = false;
+        break;
+      }
+    }
+  }
+}
+void drawBoard(){
+  lc.clearDisplay(0);
+
+  for(int i=0; i < snakeLength; i++){ 
+     lc.setLed(0, snakeY[i], snakeX[i], true);
+    }
+   lc.setLed(0, foodY, foodX, true);
+  }
+
+void gameOver(){
+  lc.clearDisplay(0);
+  for(int i = 0; i < N; i++){
+
+     lc.setRow(0, i, B11111111);
+     delay(100);
+  }
+delay(1000);
+snakeLength = 3;
+snakeX[0] = 3; snakeY[0] = 4;
+snakeX[1] = 2; snakeY[1] = 4;
+snakeX[2] = 1; snakeY[2] = 4;
+dir = RIGHT;
+spawnFood();
+}
+
+                                                                                   
+Results & Observation                                                                                                                                                                                                                               
+Observation : The result of this program is a simple Snake Game displayed on an 8×8 LED matrix that is controlled using a joystick. When the system is powered, the snake starts with a length of 3 pixels at the center of the matrix, and a food pixel appears at a random position. By moving the joystick left, right, up, or down, the snake’s direction changes accordingly, and the snake moves across the LED matrix. When the snake’s head collides with the food, the snake grows longer by one pixel and a new food appears at another random location. If the snake hits the border of the matrix or collides with its own body, the game ends: the LED matrix briefly lights up row by row as a "game over" effect, and then the game restarts with the snake reset to its initial size and position. This demonstrates how joystick inputs can be used for real-time interactive control and how logic for movement, collision detection, and game restart is implemented in embedded systems.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+PROJECT 10.3 – LED DOT MATRIX (MATRIX + JOYSTICK + LCD)
+
+At the end of the lab student should be able to:
+To design and implement a Snake Game using an 8×8 LED matrix as the visual game interface.
+To use a joystick as an input device for interactive control of the snake’s movement in different directions.
+To integrate an LDR sensor for adjusting the LED matrix brightness based on surrounding light conditions.
+To apply concepts of embedded programming such as random number generation, collision detection, analog input handling, and real-time game control in Arduino.
+
+Component List 
+Trainer Kit 
+USB cable x1 
+Matrix & Joystick                  
+Jumper M/M x 2
+Joystick                    
+Lcd
+
+Component Knowledge
+The 8×8 LED matrix, driven by the MAX7219 controller, serves as the main game display for the snake. Each LED represents a coordinate on the grid, allowing the snake’s body and food positions to be clearly visualized. The MAX7219 reduces the complexity of controlling 64 LEDs by requiring only three Arduino pins (DIN, CS, CLK) for data transfer. This makes the system efficient, enabling smooth animations and real-time updates of the snake’s movement and game state. 
+
+The joystick module is an input device that operates using two potentiometers positioned perpendicularly, enabling movement detection along the X-axis (left–right) and Y-axis (up–down). The Arduino reads the analog values from these potentiometers to determine the direction of movement, which is then used to control the snake in the game. Additionally, the joystick includes a built-in push button (SW) that can serve extra functions, such as starting, pausing, or resetting the game. 
+                                                                                                     
+The 16×2 Liquid Crystal Display (LCD) is used to show textual information such as the current score, game status, and messages like “Game Over.” It operates with RS, EN, and data pins (D4–D7) connected to the Arduino, allowing communication in 4-bit mode to save I/O pins. The LCD enhances the user experience by providing real-time feedback and game information that complements the visual gameplay on the LED matrix.
+                                                                        
+                                                                        
+Circuit Connection
+connect data to pin 11, clock to pin 13 and load to pin 10. For the joystick part, connect VRX to pin A0, VRY to pin A1 and SW to pin 2.
+For the lcd part, connect rs to pin 7, en to pin 6, d4 to pin 5, d5 to pin 4, d6 to pin 3, d7 to pin 2 and B.L to 5v 
+
+                                                                      
+Sketch
+#include<LedControl.h>
+#include<LiquidCrystal.h>
+#define DIN_PIN 11
+#define CLK_PIN 13
+#define CS_PIN 10
+LedControl lc = LedControl(DIN_PIN,CLK_PIN,CS_PIN, 1);
+
+#define VRX A0
+#define VRY A1
+#define SW A2
+
+LiquidCrystal lcd( 7, 6, 5, 4, 3, 2);
+const int N = 8;
+int snakeX[64];
+int snakeY[64];
+int snakeLength = 3;
+int foodX, foodY;
+int score = 0;
+enum Direction {UP, DOWN, LEFT, RIGHT};
+Direction dir = RIGHT;
+
+unsigned long lastMove = 0;
+int moveDelay = 400;
+
+void setup() {  
+lc.shutdown(0, false);
+lc.setIntensity(0, 8);
+lc.clearDisplay(0);
+  pinMode(SW, INPUT_UP);
+  randomSeed(analogRead(0));
+
+  lcd.begin(16, 2);
+  lcd.setCursor( 0,0);
+  lcd.print(“Snake Game!”);
+  lcd.setCuror(0, 1);
+  lcd.print(“Score: 0”);
+
+  snakeX[0] = 3; snakeY[0] = 4;
+  snakeX[1] = 2; snakeY[1] = 4;
+  snakeX[2] = 1; snakeY[2] = 4;
+  spawnFood();
+}
+void loop() {  
+     readJoystick();
+
+     If(millis() – lastMove > moveDelay){
+        lastMove = millis();
+        moveSnake();
+        drawBoard();
+    }
+}
+void readJoystick(){
+  int xVal = analogRead(VRX);
+  int yVal = analogRead(VRY);
+
+  if(xVal <300 && dir != RIGHT)dir = LEFT;
+  if(xVal >700 && dir != LEFT) dir = RIGHT;
+  if(yVal <300 && dir != DOWN) dir = UP;
+  if(yVal >700 && dir != UP)   dir = DOWN;
+}
+void moveSnake(){
+  for(int I = snakeLength – 1; I > 0; i--){
+  snakeX[i] = snakeX[i-1];
+  snakeY[i] = snakeY[i-1];
+ }
+  if(dir == UP)    snakeY[0]--;
+  if(dir == DOWN)  snakeY[0]++;
+  if(dir == LEFT)  snakeX[0]--;
+  if(dir == RIGHT) snakeX[0]++;
+
+  if(snakeX[0] < 0 || snakeX[0] >= N || snakeY[0] < 0 || snakeY[0] >= N){
+    gameOver();
+ }
+  for(int i = 1; i < snakeLength; i++){ 
+   if(snakeX[0] == snakeX[i] && snakeY[0] == snakeY[i]){
+  gameOver();
+  }
+ }
+  if(snake[0] == foodX && snakeY[0] == foodY){
+   snakeLength++;
+   score++;
+
+   lcd.setCursor(0, 1);
+   lcd.print(“Score: “);
+   lcd.print(score);
+   lcd.print(“ “);
+
+   spawnFood();
+ }
+}
+void spawFood(){
+ bool valid = false;
+ while (!valid){
+   foodX = random(0, N);
+   foodY = random(0, N);
+   valid = true;
+   for(int i=0; i< snakeLength; i++){
+      if(snakeX[i] == foodX && snakeY[i] == foodY){
+        valid = false;
+        break;
+      }
+    }
+  }
+}
+void.drawBoard(){
+  lc.clearDisplay(0);
+
+  for(int i=0; i < snakeLength; i++){ 
+     lc.setled(0, snakeY[i], snakeX[i], true);
+    }
+   lc.setLed(0, foodY, foodX, true);
+  }
+void gameOver(){
+  lc.clearDisplay(0);
+  for(int i = 0; i < N; i++){
+     lc.setRow(0, i, B11111111);
+     delay(100);
+  }
+delay(1000);
+
+lcd.clear();
+lcd.setCursor(0, 0);
+lcd.print(“Game Over!”);
+lcd.setCursor(0, 1);
+lcd.print(“Final Score:”);
+lcd.print(score);
+delay(2000);
+
+snakeLength = 3;
+snakeX[0] = 3; snakeY[0] = 4;
+snakeX[1] = 2; snakeY[1] = 4;
+snakeX[2] = 1; snakeY[2] = 4;
+dir = RIGHT;
+score = 0;
+
+lcd.clear();
+lcd.setCursor(0, 0);
+lcd.print(“Snake Game!”);
+lcd.setCursor(0, 1);
+lcd.print(“Score: 0”);
+
+spawnFood();
+ }
+                                                                         
+Results & Observation                                                                                                                                                                                           
+Observation : The snake moves on the LED matrix controlled by the joystick, while the LCD updates the score each time food is eaten.                                                                       
+Observation : The LCD shows “Game Over” with the final score, and the LED matrix briefly flashes before resetting.
+
+
