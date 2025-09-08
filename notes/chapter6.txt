@@ -1,0 +1,168 @@
+CHAPTER 6 MOTOR 
+
+PROJECT 6.1 MOTOR (SERVO MOTOR) 
+
+At the end of the lab student should be able to:
+To learn how to interface a servo motor with an Arduino microcontroller.
+To program and control the servo motor’s angular position using code.
+To observe and analyze the servo’s precise and repeatable movement
+
+Component List 
+Trainer Kit 
+USB cable x1 
+Servo Motor
+Jumper M/M x 1
+
+Component Knowledge
+A servo motor is an electromechanical device designed to rotate its shaft to a specific position within a limited range, typically 0° to 180°, by using a control signal in the form of pulse width modulation (PWM). It operates on a closed-loop control system, where internal feedback ensures accurate and precise positioning according to the input signal. Commonly powered between 4.8V and 6V, servo motors are valued for their high precision, fast response, and ease of interfacing with microcontrollers. They are widely used in applications such as robotic arms, camera gimbals, RC vehicles, automated door locks, and pan-tilt camera systems.
+
+Sketch
+#include<Servo.h>
+  Servo myservo;
+   int pos = 0;
+
+void setup(){
+  myservo.attach(9);
+}  
+  
+void loop (){ 
+for (pos = 0; pos <= 180; pos+=1){
+  myservo.write(pos);
+  delay(15);         
+ }
+
+for (pos = 180; pos >= 0; pos-=1){
+  myservo.write(pos);
+  delay(15);         
+ }
+}
+                                                                                                                              
+
+Results & Observation                                                                       
+Observation : The servo motor will sweep back and forth between 0 degrees and 180 degrees in a continuous loop.
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+PROJECT 6.2 MOTOR – (SERVO MOTOR AND POTENTIOMETER)
+
+At the end of the lab student should be able to:
+To interface a servo motor and a potentiometer with an Arduino microcontroller.
+To control the servo motor’s angle based on the potentiometer’s position.
+To observe the real-time relationship between rotation and servo movement.
+
+Component List 
+Trainer Kit 
+USB cable x1 
+Servo Motor and Potentiometer
+Jumper M/M x 4
+
+Component Knowledge
+A servo motor and potentiometer combination is a simple yet effective setup for controlling precise angular movement manually. The potentiometer functions as a variable resistor that changes its output voltage according to the position of its rotating knob. This analog voltage is read by a microcontroller, such as an Arduino, and then mapped to a corresponding servo angle, usually between 0° and 180°. By turning the potentiometer, the user can directly control the position of the servo shaft in real time.
+                                                                                                                  
+This arrangement provides a clear demonstration of how an analog input device can control an actuator with high precision. It is widely used in applications such as manually adjusting robotic arms, controlling camera angles, operating model mechanisms, and in educational experiments to teach the concepts of input-output device interfacing, signal mapping, and closed-loop control.
+
+Sketch
+#include<Servo.h>
+  Servo myServo;
+   int potPin = A0;
+
+void setup(){
+       myServo.attach(9);
+}  
+  
+void loop (){ 
+int potValue = analogRead(potPin);
+int angle = map(potValue, 0, 1023, 0, 180);
+myServo.write(angle);         
+  delay(15);         
+}
+
+Results & Observation                                          
+Observation : turning the potentiometer will smoothly change the servo motor’s position between 0 degrees to 180 degrees, with the servo angle directly following the knob’s rotation. 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+PROJECT 6.3 MOTOR – (STEP MOTOR)
+
+At the end of the lab student should be able to:
+To interface a stepper motor with Arduino microcontroller.
+To program the stepper motor for precise rotational control in both directions.
+To observe and analyze the step-by-step motion and speed of the motor.
+
+Component List 
+Trainer Kit 
+USB cable x1 
+Step motor     
+Jumper M/M x 4
+
+Component Knowledge
+A stepper motor is an electromechanical device that moves in discrete steps, allowing precise control over rotation angle, speed, and position without the need for feedback systems. It operates by energizing coils in a specific sequence, causing the motor’s rotor to move in fixed increments, often measured in degrees per step (e.g., 1.8° or 0.9°). One common example is the 28BYJ-48 stepper motor, which requires 2048 steps for a full revolution. Stepper motors are widely used in applications requiring accurate positioning, such as 3D printers, CNC machines, and automated positioning systems.
+                                                           
+sketch                                                                  
+#include<Stepper.h>
+const int stepsPerRevolution = 2048;
+Stepper myStepper(stepsPerRevolution,8, 9 ,10, 11);
+
+void setup(){
+       myStepper.setSpeed(10);
+}  
+  
+void loop (){ 
+myStepper.step(stepsPerRevolution);
+delay(1000);
+myStepper.step(-stepsPerRevolution);
+  delay(1000);         
+}
+
+Results & Observation                                                                                                                                                                                                                                 
+Observation : The stepper motor will rotate one full turn clockwise at 15 RPM, pause for 1 second, then rotate one full turn counter clockwise, pause for 1 second, and repeat this motion continuously.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+PROJECT 6.4 MOTOR – (STEP MOTOR AND LCD)
+
+At the end of the lab student should be able to:
+To interface a stepper motor and an LCD display with an Arduino microcontroller.
+To program the stepper motor for controlled forward and backward rotations while displaying status messages on the LCD.
+To observe the synchronization between motor movement and LCD status updates in real time.
+
+Component List 
+Trainer Kit 
+USB cable x1 
+Step motor
+Jumper M/M x 11
+
+Component Knowledge
+A stepper motor and LCD combination allows both precise motion control and real-time visual feedback in embedded systems. The stepper motor is an electromechanical device that rotates in discrete steps, enabling accurate positioning without the need for feedback sensors. It operates by energizing multiple coils in a defined sequence, with common models like the 28BYJ-48 requiring 2048 steps for a full revolution. The LCD (Liquid Crystal Display), often in a 16x2 configuration, is an alphanumeric display module used to present messages, data, or system status. It operates by manipulating liquid crystal molecules to block or transmit light, often backlit for visibility. When integrated, the LCD can display the stepper motor’s operating status, such as direction, speed, or current task, while the stepper executes precise movements. This pairing is widely used in CNC machines, 3D printers, automated positioning systems, and educational projects to demonstrate microcontroller control and user interaction.
+
+Sketch       
+#include<Stepper.h>
+#include<LiquidCrystal.h>
+const int stepsPerRevolution = 2048;
+Stepper myStepper(stepsPerRevolution,8, 9 ,10, 11);
+LiquidCrystal lcd(2, 3, 4, 5, 6, 7);
+
+void setup(){
+       myStepper.setSpeed(10);
+      lcd.begin(16, 2);
+      lcd.print(“Stepper Ready!”);
+      delay(2000);
+      lcd.clear();
+}  
+  
+void loop (){ 
+   Lcd.clear();
+   Lcd.print(“Moving Forward”);
+myStepper.step(stepsPerRevolution);
+delay(1000);
+
+Lcd.clear();
+Lcd.print(“Moving Backward”);
+myStepper.step(-stepsPerRevolution);
+  delay(1000);         
+}                                                                  
+
+Results & Observation
+Observation :
+1. When powered, the LCD first displays “Stepper Ready!” for 2 seconds.
+2. The stepper motor rotates one full turn clockwise at 10 RPM while the LCD shows “Moving Forward”.
+3. After a 1-second pause, the LCD changes to “Moving Backward” and the stepper rotates one full turn counter clockwise. This forward–backward cycle repeats continuously, with the LCD updating to indicate the motor’s current direction.
+
+
