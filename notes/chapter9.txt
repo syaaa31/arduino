@@ -1,0 +1,138 @@
+CHAPTER 9 SWITCHES 
+
+PROJECT 9.1 SWITCH 
+At the end of the lab student should be able to:
+To understand the working principle of switches as input devices in controlling electronic circuits.
+To learn how to interface multiple switches with an Arduino to control a relay in different modes.
+To develop practical skills in programming and debugging Arduino-based input/output control systems.
+
+Component List 
+Trainer Kit 
+USB cable x1 
+Servo Motor           
+Jumper M/M x 9
+
+Component Knowledge
+A switch is an electromechanical device used to control the flow of current by opening or closing a circuit. In Arduino projects, a momentary push button switch is commonly used, which only connects the circuit when pressed and disconnects when released. With the use of Arduino’s internal pull-up resistors, the switch reads as HIGH when not pressed and LOW when pressed, simplifying the wiring. Push buttons typically have four pins, connected in pairs, where pressing the switch links both pairs together. Switches are widely applied in electronics for user inputs, turning devices ON or OFF, resetting systems, and controlling external components such as relays, making them a simple yet essential component in embedded system projects.
+
+Sketch
+#define SWITCH_1 2
+#define SWITCH_2 3
+#define SWITCH_3 4
+#define SWITCH_4 5
+
+void setup(){  
+Serial.begin(9600);
+
+      pinMode(SWITCH_1, INPUT_PULLUP);
+      pinMode(SWITCH_2, INPUT_PULLUP);
+      pinMode(SWITCH_3, INPUT_PULLUP);
+      pinMode(SWITCH_4, INPUT_PULLUP);
+}  
+
+void loop (){ 
+if(digitalRead(SWITCH_1)==0){
+Serial.println("Switch 1 pressed");
+delay(200);         
+ }
+  if(digitalRead(SWITCH_2)==0){
+  Serial.println("Switch 2 pressed");
+  delay(200);         
+ }
+  if(digitalRead(SWITCH_3)==0){
+  Serial.println("Switch 3 pressed");
+  delay(200);         
+}
+  if(digitalRead(SWITCH_4)==0){
+  Serial.println("Switch 4 pressed");
+  delay(200);         
+ }
+}
+
+
+Results & Observation
+Observation :
+1. When you press Switch 1, Serial monitor shows “Switch 1 pressed”.
+2. When you press Switch 2, Serial monitor shows “Switch 2 pressed”.
+3. When you press Switch 3, Serial monitor shows “Switch 3 pressed”.
+4. When you press Switch 4, Serial monitor shows “Switch 4 pressed”.
+---------------------------------------------------------------------------------------------------------------------------
+
+PROJECT 9.2 SWITCHES – (SWITCH AND RELAY)
+
+At the end of the lab student should be able to:
+To detect the press of switches using Arduino digital input pins.
+To display the switch status on the Serial Monitor.
+To control external devices (relay/LED) based on switch input.
+
+Component List 
+Trainer Kit 
+USB cable x1 
+Switch and relay
+Jumper M/M x 10
+
+Component Knowledge
+A switch is an electromechanical device used to manually control the flow of electricity by opening or closing a circuit. In microcontroller applications such as Arduino, push button switches are commonly used as digital inputs, where the INPUT_PULLUP configuration keeps the pin normally HIGH and changes it to LOW when pressed. This simple mechanism allows the switch to be used for user input, triggering actions like turning on an LED, activating a relay, or sending a signal to the system.
+
+A relay is an electromagnetic switch that enables a low-power control signal from a microcontroller to operate high-power devices such as lamps, motors, or fans. It consists of a coil and movable contacts; when the coil is energized, a magnetic field pulls the contacts to close or open the circuit. Relays provide electrical isolation between the control circuit and the load, ensuring safety when interfacing low-voltage electronics with higher voltage appliances.
+
+Circuit Connection
+connect cs1 till cs4 to ground and connect sw1 to pin 2, sw2 to pin3, sw3 to pin 4, sw4 to pin 5.
+
+Sketch
+#define SWITCH_1 2
+#define SWITCH_2 3
+#define SWITCH_3 4
+#define SWITCH_4 5
+#define RELAY_PIN 8
+
+void setup(){  
+   pinMode(RELAY_PIN, OUTPUT);
+      pinMode(SWITCH_1, INPUT_PULLUP);
+      pinMode(SWITCH_2, INPUT_PULLUP);
+      pinMode(SWITCH_3, INPUT_PULLUP);
+      pinMode(SWITCH_4, INPUT_PULLUP);
+
+       Serial.begin(9600);
+       Serial.println("System Initialized.");
+}  
+
+void loop (){ 
+if(digitalRead(SWITCH_1)==0){
+digitalWrite(RELAY_PIN, HIGH);
+Serial.println("Relay is ON.");
+delay(200);         
+ }
+  if(digitalRead(SWITCH_2)==0){
+  digitalWrite(RELAY_PIN, LOW);
+  Serial.println("Relay is OFF.");
+  delay(200);         
+ }
+  if(digitalRead(SWITCH_3)==0){
+  digitalWrite(RELAY_PIN, !digitalRead(RELAY_PIN));
+  if (digitalRead(RELAY_PIN) == HIGH) {
+  Serial.println("Relay is ON.");
+ }   else {
+  Serial.println("Relay is OFF.");
+ }
+  delay(200);         
+}
+  if(digitalRead(SWITCH_4)==0){
+  digitalWrite(RELAY_PIN, HIGH);
+  Serial.println(" Relay is ON for 1 second.");
+  delay(1000);         
+  digitalWrite(RELAY_PIN, LOW);  // Turn off the relay
+  Serial.println("Relay is OFF.");
+   delay(200);
+}
+
+                                                  
+Results & Observation
+                                             
+Observation : 
+1. when switch 1 pressed, relay turns ON and stays ON.
+2. When switch 2 pressed, rely turns OFF and stays OFF.
+3. when switch 3 pressed, if relay was ON then it turns relay  OFF.
+4. when switch 3 pressed, if relay was OFF then it turns relay  ON.
+5. when switch 4 pressed, if relay turns ON  for 1 second then it turns relay  OFF
+
