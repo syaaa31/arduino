@@ -1,0 +1,263 @@
+CHAPTER 4 : 7 SEGMENT
+PROJECT 4.1 – (SINGLE 7 SEGMENT)
+At the end of the lab student should be able to:
+Understand and know how to use pin digital output.
+Understand the use of 7 Segment and configure with it.
+
+Component List 
+Trainer Kit 
+USB cable x1 
+7 SEGMENT INPUT
+Jumper M/M x8
+
+Component Knowledge
+A single seven-segment display is a simple yet effective electronic component used for visual representation of numeric digits (0-9) in electronic devices. Comprising seven individually illuminated segments arranged in the shape of the number "8," each segment can be independently activated or deactivated to display different digits. The primary objective of a single seven- segment display is to convey numeric information in a clear and compact format, making it widely employed in digital clocks, calculators, temperature displays, and various electronic instruments.
+                                                        
+A typical single seven-segment display has 10 pins. The pins are often labeled as follows: Common Anode (CA) or Common Cathode (CC):
+In a Common Anode display : this pin is connected to the positive voltage (Vcc), and the segments are connected to the ground (GND).
+In a Common Cathode display : this pin is connected to the ground (GND), and the segments are connected to the positive voltage (Vcc).
+
+Sketch 
+// Segment pins: A, B, C, D, E, F, G, DP
+int segPins[] = {2, 3, 4, 5, 6, 7, 8, 9}; 
+
+// Digits 0-9 segment patterns (A-G, DP) for common cathode
+byte numbers[10][8] = {
+   {1,1,1,1,1,1,0,0}, // 0
+   {0,1,1,0,0,0,0,0}, // 1
+   {1,1,0,1,1,0,1,0}, // 2
+   {1,1,1,1,0,0,1,0}, // 3
+   {0,1,1,0,0,1,1,0}, // 4
+   {1,0,1,1,0,1,1,0}, // 5
+   {1,0,1,1,1,1,1,0}, // 6
+   {1,1,1,0,0,0,0,0}, // 7
+   {1,1,1,1,1,1,1,0}, // 8
+   {1,1,1,1,0,1,1,0}  // 9
+};
+
+void setup() {
+  for (int i = 0; i < 8; i++) {
+    pinMode(segPins[i], OUTPUT);
+  }
+}
+void loop() {
+  for (int digit = 0; digit < 10; digit++) {
+    displayDigit(digit);
+    delay(1000);
+  }
+}
+void displayDigit(int digit) {
+  for (int i = 0; i < 8; i++) {
+    digitalWrite(segPins[i], numbers[digit][i]);
+  }
+}
+
+
+Result & Observation
+will display 0 until 9
+------------------------------------------------------------------------------------------------------------
+
+PROJECT 4.2  – (SINGLE 7 SEGMENT + BUZZER)
+
+At the end of the lab student should be able to:
+Understand and know how to use pin digital output.
+Understand the use of 7 Segment and buzzer.
+
+Component List 
+Trainer Kit      
+USB cable x1 
+7 SEGMENT INPUT
+BUZZER
+Jumper M/M x8
+
+Component Knowledge
+A single seven-segment display is a simple yet effective electronic component used for visual representation of numeric digits (0-9) in electronic devices. Comprising seven individually illuminated segments arranged in the shape of the number "8," each segment can be independently activated or deactivated to display different digits. The primary objective of a single seven- segment display is to convey numeric information in a clear and compact format, making it widely employed in digital clocks, calculators, temperature displays, and various electronic instruments.
+                                                           
+A typical single seven-segment display has 10 pins. The pins are often labeled as follows: Common Anode (CA) or Common Cathode (CC):
+In a Common Anode display : this pin is connected to the positive voltage (Vcc), and the segments are connected to the ground (GND).
+In a Common Cathode display : this pin is connected to the ground (GND), and the segments are connected to the positive voltage (Vcc).
+DP = Decimal Point.
+
+A buzzer has two pins, namely positive and negative. The positive terminal is represented by the ‘+’ symbol and negative terminal is represented by the ‘-’ symbol just like an led and a capacitor.  
+
+Active Buzzers: Active buzzers are called ‘active’ because they can produce sound directly when connected to a battery. If we connect the positive and negative terminals properly to the battery, It can generate sound by itself because it has a build-in oscillator. Active buzzers are the simplest to use. They are normally available in voltage ranges from 1.5V to 24V. they can produce a sound frequency of about 2kHz±300Hz. The current consumption of an active buzzer is ≤ 25mA.
+Passive Buzzers: A passive buzzer can’t produce sound directly when connected to battery because it does not have an internal oscillating source. A passive buzzer requires an AC voltage signal source in order to make sound. It works like an electromagnetic squeaker, where changing input signal and frequency produces the sound. Therefore, these passive buzzers can produce a number of different tones based on the input frequency of the signal. The internal coil resistance of passive buzzer is very low, 16 ohm so it can draw a higher amount of current around 36mA. For safety, we can also connect 100ohm series resistor.
+
+Sketch 
+// Segment pins: A, B, C, D, E, F, G, DP
+int segPins[] = {2, 3, 4, 5, 6, 7, 8, 9}; 
+int buzzerPin = 10; // Buzzer pin
+
+// Digits 0-9 segment patterns (A-G, DP) for common cathode
+byte numbers[10][8] = {
+  {1,1,1,1,1,1,0,0}, // 0
+  {0,1,1,0,0,0,0,0}, // 1
+  {1,1,0,1,1,0,1,0}, // 2
+  {1,1,1,1,0,0,1,0}, // 3
+  {0,1,1,0,0,1,1,0}, // 4
+  {1,0,1,1,0,1,1,0}, // 5
+  {1,0,1,1,1,1,1,0}, // 6
+  {1,1,1,0,0,0,0,0}, // 7
+  {1,1,1,1,1,1,1,0}, // 8
+  {1,1,1,1,0,1,1,0}  // 9
+};
+
+void setup() {
+  for (int i = 0; i < 8; i++) {
+    pinMode(segPins[i], OUTPUT);
+  }
+    pinMode(buzzerPin, OUTPUT);
+}
+
+void loop() {
+  for (int digit = 0; digit < 10; digit++) {
+    displayDigit(digit);
+
+    // Play a short beep when number changes
+    tone(buzzerPin, 1000, 200); // 1000 Hz for 200ms
+
+    delay(1000); // Delay before next number
+  }
+}
+
+void displayDigit(int digit) {
+  for (int i = 0; i < 8; i++) {
+    digitalWrite(segPins[i], numbers[digit][i]);
+  }
+}
+
+Results and Discussion
+Discussion : The number changes from 0 to 9 , a beep sound will occur after every number .
+----------------------------------------------------------------------------------------------------------------------------
+
+PROJECT 4.3  – (SINGLE 7 SEGMENT+SWITCH)
+
+At the end of the lab student should be able to:
+Understand and know how to use pin digital output.
+Understand the use of 7 Segment and switches.
+
+Component List 
+Trainer Kit       
+USB cable x1 
+Switches
+7 Segment Input
+Jumper M/M x8
+
+Component Knowledge
+A single seven-segment display is a simple yet effective electronic component used for visual representation of numeric digits (0-9) in electronic devices. Comprising seven individually illuminated segments arranged in the shape of the number "8," each segment can be independently activated or deactivated to display different digits. The primary objective of a single seven- segment display is to convey numeric information in a clear and compact format, making it widely employed in digital clocks, calculators, temperature displays, and various electronic instruments.
+                                                            
+A typical single seven-segment display has 10 pins. The pins are often labeled as follows: Common Anode (CA) or Common Cathode (CC):
+In a Common Anode display : this pin is connected to the positive voltage (Vcc), and the segments are connected to the ground (GND).
+In a Common Cathode display : this pin is connected to the ground (GND), and the segments are connected to the positive voltage (Vcc).
+DP = Decimal Point.
+
+SKETCH
+// Segment pins: A, B, C, D, E, F, G, DP
+int segPins[] = {2, 3, 4, 5, 6, 7, 8, 9}; 
+// Push button pin
+int buttonPin = 10; 
+// Digits 0-9 segment patterns (A-G, DP)
+byte numbers[10][8] = {
+    {1,1,1,1,1,1,0,0}, // 0
+    {0,1,1,0,0,0,0,0}, // 1
+    {1,1,0,1,1,0,1,0}, // 2
+    {1,1,1,1,0,0,1,0}, // 3
+    {0,1,1,0,0,1,1,0}, // 4
+    {1,0,1,1,0,1,1,0}, // 5
+    {1,0,1,1,1,1,1,0}, // 6
+    {1,1,1,0,0,0,0,0}, // 7
+    {1,1,1,1,1,1,1,0}, // 8
+    {1,1,1,1,0,1,1,0}  // 9
+};
+int currentNumber = 0;  
+int lastButtonState = HIGH;  
+void setup() {
+  for (int i = 0; i < 8; i++) {
+    pinMode(segPins[i], OUTPUT);
+  }
+  pinMode(buttonPin, INPUT_PULLUP); // Button connected to GND
+}
+void loop() {
+  int buttonState = digitalRead(buttonPin);
+  // Detect button press (HIGH -> LOW)
+  if (lastButtonState == HIGH && buttonState == LOW) {
+    currentNumber++;
+    if (currentNumber > 9) currentNumber = 0; // Wrap around
+    displayDigit(currentNumber);
+    delay(200); // Debounce
+  }
+  lastButtonState = buttonState;
+}
+void displayDigit(int digit) {
+  for (int i = 0; i < 8; i++) {
+    digitalWrite(segPins[i], numbers[digit][i]);
+ }
+}
+
+
+Results and Discussion
+Discussion : The number changes from 0 to 9 , if we press the switch buttton will occur after every number .
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+PROJECT 4.4  – ( 7 SEGMENT 4 DIGITS )
+
+At the end of the lab student should be able to:
+To understand the working principle of a 4-digit 7-segment display using Arduino.
+To implement multiplexing technique for displaying numbers across multiple digits.
+To develop a program that counts from 1 to 100 and displays the output on the 7-segment display in real time.
+
+Component List 
+Trainer Kit       
+USB cable x1 
+7 SEGMENT INPUT
+Jumper M/M x8
+
+Component Knowledge
+A single seven-segment display is a simple yet effective electronic component used for visual representation of numeric digits (0-9) in electronic devices. Comprising seven individually illuminated segments arranged in the shape of the number "8," each segment can be independently activated or deactivated to display different digits. The primary objective of a single seven- segment display is to convey numeric information in a clear and compact format, making it widely employed in digital clocks, calculators, temperature displays, and various electronic instruments.		
+                                                          
+A typical single seven-segment display has 10 pins. The pins are often labeled as follows: Common Anode (CA) or Common Cathode (CC):
+In a Common Anode display : this pin is connected to the positive voltage (Vcc), and the segments are connected to the ground (GND).
+In a Common Cathode display : this pin is connected to the ground (GND), and the segments are connected to the positive voltage (Vcc).
+DP = Decimal Point.
+
+SKETCH
+#include "SevSeg.h"
+SevSeg sevseg;
+
+int number = 1;  // Start from 1
+unsigned long lastUpdate = 0;  // For timing
+const int interval = 1000;     // 1 second
+
+void setup() {
+  byte numDigits = 4;
+  byte digitPins[] = {10, 11, 12, 13};
+  byte segmentPins[] = {2, 3, 4, 5, 6, 7, 8, 9};
+
+  bool resistorsOnSegments = true;
+  byte hardwareConfig = COMMON_CATHODE;
+
+  sevseg.begin(hardwareConfig, numDigits, digitPins, segmentPins, resistorsOnSegments);
+  sevseg.setBrightness(90);
+}
+
+void loop() {
+  sevseg.setNumber(number);
+  sevseg.refreshDisplay();  // Must run continuously
+
+  // Update number every 1 second using millis()
+  if (millis() - lastUpdate >= interval) {
+    lastUpdate = millis();
+    number++;
+    if (number > 100) {
+      number = 1;  // Reset to 1 after reaching 100
+    }
+  }
+}
+
+Result & Observation
+Observation : 
+The display updated smoothly without flickering due to the continuous call of sevseg.refreshDisplay().
+The counter advanced by 1 digit per second, confirming that the millis() function was used correctly for non-blocking timing.
+Once the counter exceeded 100, it automatically reset to 1, ensuring the display looped consistently.
+
+
