@@ -1,0 +1,52 @@
+CHAPTER 8 JOYSTICK
+
+PROJECT 8.1 JOYSTICK
+
+At the end of the lab student should be able to:
+To study the working principle of a joystick as an input device.
+To read analog values from the joystick using Arduino and convert them into X and Y positions.
+To control external devices (e.g., motor, LED, or servo) based on joystick movement.
+
+Component List 
+Trainer Kit 
+USB cable x1 
+Servo Motor        
+Jumper M/M x 3
+
+Component Knowledge
+A joystick is an input device that provides two-dimensional control by varying resistance along two axes, typically labeled X and Y. It consists of two potentiometers arranged perpendicularly, where movement of the stick changes the voltage levels, which can be read as analog signals by a microcontroller such as Arduino. Many joysticks also include a built-in push button that activates when the stick is pressed down, providing an additional digital input. Joysticks are commonly used in gaming, robotics, and control systems to allow intuitive directional movement and proportional control. 
+
+Sketch
+#define JOY_X A0
+#define JOY_Y A1
+#define BUTTON_PIN 2
+
+void setup(){  
+Serial.begin(9600);
+      pinMode(BUTTON_PIN, INPUT_PULLUP);
+      Serial.println("Joystick Testing...");
+}  
+  
+void loop (){ 
+int joyX = analogRead(JOY_X);
+int joyY = analogRead(JOY_Y);
+
+  int buttonState = digitalRead(BUTTON_PIN);
+
+   Serial.print("X: ");
+   Serial.print(joyX);
+   Serial.print("  Y: ");
+   Serial.print(joyY);
+
+   if (buttonState == LOW) {
+      Serial.println("  Button Pressed");
+  } else{
+  Serial.println(“  Button Released”);
+  }
+  delay(100);
+}
+
+Results & Observation
+Observation : The joystick provides a pair of analog values (X and Y) ranging from 0 to 1023, representing its position, and a digital signal from the push button (pressed or released). The center position hovers around 512, and movements cause proportional changes along each axis. This confirms that the joystick can be effectively used as an input device to control direction, speed, or actions in Arduino-based projects.
+
+
