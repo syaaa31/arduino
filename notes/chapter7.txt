@@ -1,0 +1,90 @@
+CHAPTER 7 INFRARED SENSOR
+
+PROJECT 7.1 (INFRARED SENSOR)
+
+At the end of the lab student should be able to:
+To understand the working principle of an IR sensor in detecting objects or obstacles.
+To learn how to interface an IR sensor with an Arduino for digital input reading.
+To observe and analyze the sensor’s response when an object is placed at different distances.
+
+Component List 
+Trainer Kit 
+USB cable x1 
+IR Sensor
+Jumper M/M x 1
+
+Component Knowledge
+An Infrared (IR) sensor is an electronic device that uses infrared light to detect objects, distance, or surface characteristics. It works by emitting IR light through an IR LED and receiving the reflected signal using a photodiode or phototransistor. When an object comes in front of the sensor, the amount of reflected IR light changes, which the sensor converts into an electrical signal. IR sensors are commonly available as analog type (output varies with distance) and digital type (output is HIGH or LOW depending on detection). They typically have three pins: VCC (power supply, usually 5V), GND (ground), and OUT (signal output). In Arduino projects, digital IR sensors are widely used for obstacle detection, line-following robots, proximity sensing, and automation systems because they are simple, inexpensive, and reliable in short-range applications.      
+                                                                                                             
+Sketch
+#include<IRremote.hpp>
+  const int IR_RECEIVE_PIN = 7;
+
+void setup() {  
+Serial.begin(9600);
+  IrReceiver.begin( IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
+}
+
+void loop() {  
+  if(IrReceiver.decode()){
+Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);
+IrReceiver.printIRResultShort(&Serial);
+   IrReceiver.resume();
+  }
+}
+
+Results & Observation                                                               
+Observation : When a button on the remote control is pressed, the IR receiver detects the signal and the Serial Monitor displays a unique HEX code along with additional details such as the protocol, address, and command. Each button consistently produces the same HEX value, while holding a button may generate repeat codes. If no button is pressed, no output appears. The system works reliably within a few meters when the remote is pointed at the IR sensor, confirming proper communication between the remote and the Arduino.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+PROJECT 7.2 INFRARED SENSOR – (IR SENSOR AND LED)
+
+At the end of the lab student should be able to:
+interface an IR remote control with Arduino using an IR receiver module.
+To read and decode IR remote signals into unique HEX codes.
+To implement a toggle function where pressing a specific button (e.g., button “5”) turns an LED ON and OFF alternately.
+
+Component List 
+Trainer Kit 
+USB cable x1 
+IR Sensor & Active high LED
+Jumper M/M x 2
+
+Component Knowledge
+An IR sensor is an electronic device that uses infrared light to detect signals, objects, or movement. It typically consists of an IR transmitter (infrared LED) that emits light and a receiver (photodiode or phototransistor) that detects the reflected or transmitted IR signal. In remote control applications, the sensor is tuned to receive modulated IR light (usually 38 kHz) from a remote, decode it into digital signals, and send it to the microcontroller for further processing. IR sensors are widely used in remote controls, obstacle detection, counters, and automation systems.          
+                                                                                                                               
+An active-high LED is an LED configuration where the LED turns ON when the control pin outputs a logic HIGH signal. In this setup, the LED anode is connected to the microcontroller pin (through a current-limiting resistor), and the cathode is connected to ground. When the microcontroller pin goes HIGH, current flows from the pin through the LED to ground, lighting it up. This is the most common way to connect LEDs in Arduino projects since it is simple, intuitive, and easy to control using digitalWrite(HIGH) for ON and digitalWrite(LOW) for OFF.
+
+Sketch
+#include<IRremote.hpp>
+  const int IR_RECEIVE_PIN = 7;
+  const int redPin = 10;
+  bool ledState = false;
+
+void setup() {  
+Serial.begin(9600);
+  IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
+  pinMode(redPin, OUTPUT);
+}
+void loop() {  
+  if(IrReceiver.decode()){
+Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);
+IrReceiver.printIRResultShort(&Serial);
+
+switch (IrReceiver.decodedIRData.decodedRawData){
+case 0xE31CFF00:
+Serial.println(“Button 5 pressed”);
+ledState = !ledState;
+digitalWrite(redPin, ledState ? HIGH : LOW);
+break;
+}
+   IrReceiver.resume();
+  }
+}
+
+Results & Observation                                                                                           Figure 7.2.5 (LED lights up RED)
+Observation : When we press 5, the LED lights up red.                                         
+Observation : When we press 5 again, LED turns OFF.
+
+
+
