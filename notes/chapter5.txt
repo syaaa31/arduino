@@ -1,0 +1,240 @@
+CHAPTER 5 LCD
+PROJECT 5.1 – (LCD)
+
+At the end of the lab student should be able to:
+To understand the basic working principle of a 16x2 character LCD.
+To learn how to initialize and control the LCD using a microcontroller.
+To display simple text and numerical data on the LCD screen.
+
+Component List 
+Trainer Kit 
+USB cable x1 
+LCD
+Jumper M/M x7
+
+Component Knowledge
+The 16×2 Liquid Crystal Display (LCD) is used to show textual information such as the current score, game status, and messages like “Game Over.” It operates with RS, EN, and data pins (D4–D7) connected to the Arduino, allowing communication in 4-bit mode to save I/O pins. The LCD enhances the user experience by providing real-time feedback and game information that complements the visual gameplay on the LED matrix.
+                                                                    
+                                                              
+Sketch 
+#include <LiquidCrystal.h>
+// initialize the library by associating any needed LCD interface pin
+// with the arduino pin number it is connected to
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+    
+void setup() {
+ // set up the LCD's number of columns and rows:
+   lcd.begin(16, 2);
+ // Print a message to the LCD.
+   lcd.print("Hi, Welcome to ");
+   lcd.setCursor(0, 1);          // move to second line
+   lcd.print("KRC ELECTRONICS"); // print second line
+}
+    void loop() {
+}
+
+
+Result & Observation
+Observation : the LCD screen display Hi, Welcome to in first row and KRC ELECTRONIC in second row.
+--------------------------------------------------------------------------------------------------------------------------------
+
+PROJECT 5.2  – (LCD + GYRO)
+
+At the end of the lab student should be able to:
+To interface the MPU6050 gyroscope with a microcontroller via the I²C protocol.
+To acquire and process X, Y, and Z axis rotational data from the sensor.
+To display the real-time gyroscope readings on the 16x2 LCD.
+
+Component List 
+Trainer Kit       
+USB cable x1 
+7 SEGMENT INPUT
+BUZZER
+Jumper M/M x9
+
+Component Knowledge
+Gyroscopes measure the speed of rotation around one or more axes. Connected to the Arduino, they can be used to control the orientation of drones, robots, and autonomous vehicles, or to detect body motion with wearable sensors. The gyroscope we will use in this article is the L3GD20H axis gyroscope. It’s probably the most popular gyroscope for Arduino projects.
+
+The L3GD20H sensor chip runs on 3.3 volts, but if the breakout board has a voltage regulator, it can be   powered from the Arduino’s 5 volt power supply ,the gyroscope has eight pins:
+INT: Interrupt digital output pin.
+AD0: I2C Slave Address LSB pin. This is the 0th bit in 7-bit slave address of device. If  connected to VCC then it is read as logic one and slave address changes.
+XCL: Auxiliary Serial Clock pin. This pin is used to connect other I2C interface enabled sensors SCL pin to MPU-6050.
+XDA: Auxiliary Serial Data pin. This pin is used to connect other I2C interface enabled sensors  SDA pin to MPU-6050.
+SCL: Serial Clock pin. Connect this pin to microcontrollers SCL pin. 
+SDA: Serial Data pin. Connect this pin to microcontrollers SDA pin. 
+GND: Ground pin. Connect this pin to ground connection.
+VCC: Power supply pin. Connect this pin to +5V DC supply.
+The 16×2 Liquid Crystal Display (LCD) is used to show textual information such as the current score, game status, and messages like “Game Over.” It operates with RS, EN, and data pins (D4–D7) connected to the Arduino, allowing communication in 4-bit mode to save I/O pins. The LCD enhances the user experience by providing real-time feedback and game information that complements the visual gameplay on the LED matrix.
+
+Sketch 
+#include <Wire.h>
+#include <LiquidCrystal.h>
+
+// LCD pins: RS, EN, D4, D5, D6, D7
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+ const int MPU = 0x68; // MPU6050 I2C address 
+  int16_t AcX, AcY, AcZ, Tmp, GyX, GyY, GyZ;
+  int16_t GyX_offset = 0, GyY_offset = 0, GyZ_offset = 0;
+
+void setup() {
+// LCD setup
+  lcd.begin(16, 2);
+  lcd.print("Initializing...");
+  
+  // I2C setup
+  Wire.begin();
+  Wire.beginTransmission(MPU);
+  Wire.write(0x6B);  // PWR_MGMT_1 register
+  Wire.write(0);     // Wake up MPU6050
+  Wire.endTransmission(true); 
+
+  delay(1000);
+
+  lcd.clear();
+  lcd.print("Calibrating...");
+  calibrateGyro(); // Remove bias
+
+  lcd.clear(); 
+}    
+void loop() {
+  readMPU();
+  
+   // Convert raw gyro to deg/sec (±250 dps range, sensitivity = 131)
+  int GyX_dps = (GyX - GyX_offset) / 131;
+  int GyY_dps = (GyY - GyY_offset) / 131;
+  int GyZ_dps = (GyZ - GyZ_offset) / 131;
+    
+  // Display on LCD (whole numbers only)
+  lcd.setCursor(0, 0);
+  lcd.print("  X:");
+  lcd.print(GyX_dps);
+  lcd.print("  Y:");
+  lcd.print(GyY_dps);
+
+  lcd.setCursor(0, 1);
+  lcd.print("    Z:");
+  lcd.print(GyZ_dps);
+  lcd.print("     "); // Clear leftovers
+
+  delay(500);
+ }
+void readMPU() {
+  Wire.beginTransmission(MPU);
+  Wire.write(0x3B);
+  Wire.endTransmission(false);
+  Wire.requestFrom(MPU, 14, true);
+
+  AcX = Wire.read() << 8 | Wire.read();
+  AcY = Wire.read() << 8 | Wire.read();
+  AcZ = Wire.read() << 8 | Wire.read();
+  Tmp = Wire.read() << 8 | Wire.read();
+  GyX = Wire.read() << 8 | Wire.read();
+  GyY = Wire.read() << 8 | Wire.read();
+  GyZ = Wire.read() << 8 | Wire.read();
+}
+void calibrateGyro() {
+  long sumX = 0, sumY = 0, sumZ = 0;
+  for (int i = 0; i < 100; i++) {
+     readMPU();
+     sumX += GyX;
+     sumY += GyY;
+     sumZ += GyZ;
+     delay(5);
+}
+  GyX_offset = sumX / 100;
+  GyY_offset = sumY / 100;
+  GyZ_offset = sumZ / 100;
+}
+
+Results and Discussion
+Discussion : The MPU6050 displayed X = -7, Y = -7, Z = 2 dps on the LCD, indicating the sensor was almost stationary with minor noise variations.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+PROJECT 5.3  – (LCD + POTENTIOMETER)
+At the end of the lab student should be able to:
+To interface a potentiometer with a microcontroller as an analog input device.
+To read and convert the potentiometer’s varying voltage into digital values.
+To visualize the potentiometer output both numerically and graphically on the 16x2 LCD.
+
+Component List 
+Trainer Kit       
+USB cable x1 
+LCD
+POTENTIOMETER
+Jumper M/M x8
+
+Component Knowledge
+The 16×2 Liquid Crystal Display (LCD) is used to show textual information such as the current score, game status, and messages like “Game Over.” It operates with RS, EN, and data pins (D4–D7) connected to the Arduino, allowing communication in 4-bit mode to save I/O pins. The LCD enhances the user experience by providing real-time feedback and game information that complements the visual gameplay on the LED matrix.
+
+A potentiometer is a three-terminal variable resistor used to adjust voltage or signal levels. It works by sliding a contact (wiper) over a resistive track, dividing the input voltage into a variable output. In Arduino or microcontroller projects, the middle pin (wiper) is usually connected to an analog input pin to read values ranging from 0 to 1023, depending on the knob position. Potentiometers are commonly used for volume control, brightness adjustment, and sensor calibration.
+Circuit Connection
+
+Sketch 
+#include <LiquidCrystal.h>
+
+// LCD pin setup
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+// Custom chars for bar graph (0 to 5 pixels)
+byte bar0[8] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+byte bar1[8] = {0x10,0x10,0x10,0x10,0x10,0x10,0x10,0x10};
+byte bar2[8] = {0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18};
+byte bar3[8] = {0x1C,0x1C,0x1C,0x1C,0x1C,0x1C,0x1C,0x1C};
+byte bar4[8] = {0x1E,0x1E,0x1E,0x1E,0x1E,0x1E,0x1E,0x1E};
+byte bar5[8] = {0x1F,0x1F,0x1F,0x1F,0x1F,0x1F,0x1F,0x1F};
+
+void setup() {
+  lcd.begin(16, 2);
+
+// Create custom characters for bar graph
+   lcd.createChar(0, bar0);
+   lcd.createChar(1, bar1);
+   lcd.createChar(2, bar2);
+   lcd.createChar(3, bar3);
+   lcd.createChar(4, bar4);
+   lcd.createChar(5, bar5);
+
+  lcd.print("Potentiometer:");
+}
+void loop() {
+ int potVal = analogRead(A0);           
+ int barLength = map(potVal, 0, 1023, 0, 80);
+
+ // --- Center number on line 0 ---
+ lcd.setCursor(0, 0);
+ lcd.print("                "); // clear first row (16 spaces)
+
+// Convert number to string
+String numStr = String(potVal);
+ int pos = (16 - numStr.length()) / 2;  // center position
+
+ lcd.setCursor(pos, 0);
+ lcd.print(numStr);
+
+ // --- Draw bar graph on line 1 ---
+ drawBarGraph(0, 1, 16, barLength);
+ delay(100);
+}
+// Draw horizontal bar graph on LCD line
+void drawBarGraph(int x, int y, int length, int val) {
+int fullBlocks = val / 5;
+int partialBlock = val % 5;
+
+lcd.setCursor(x, y);
+for (int i = 0; i < fullBlocks; i++) {
+  lcd.write(byte(5));  // full block
+}
+if (partialBlock > 0) {
+ lcd.write(byte(partialBlock));  // partial block
+}
+for (int i = fullBlocks + (partialBlock > 0 ? 1 : 0); i < length; i++) {
+ lcd.write(byte(0));
+ }
+}
+
+Results and Discussion
+Discussion : The LCD displayed the potentiometer value ranging from 0 to 1023 and a corresponding bar graph, showing that the output increased or decreased smoothly as the knob was rotated.
+
